@@ -175,6 +175,11 @@ app.MapPost("/api/orders", async (
         return Results.Created($"/api/orders/{order.Id}",
             ApiResponse<OrderDto>.Ok(order, "Pedido creado ok"));
     }
+    catch (InvalidOperationException ex)
+    {
+        Log.Warning(ex, "Pedido rechazado por datos invalidos");
+        return Results.BadRequest(ApiResponse<OrderDto>.Fail(ex.Message));
+    }
     catch (Exception ex)
     {
         Log.Error(ex, "Error al crear el pedido");
