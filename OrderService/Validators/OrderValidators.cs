@@ -30,4 +30,18 @@ namespace OrderService.Validators
                 .NotEmpty().WithMessage("Metodo de pago valido es requerido");
         }
     }
+
+    public class UpdateOrderStatusValidator : AbstractValidator<UpdateOrderStatusDto>
+    {
+        private static readonly string[] ValidStatuses =
+            { "Pending", "Processing", "Confirmed", "Shipped", "Delivered", "Cancelled" };
+
+        public UpdateOrderStatusValidator()
+        {
+            RuleFor(x => x.Status)
+                .NotEmpty().WithMessage("Estado es requerido")
+                .Must(status => ValidStatuses.Contains(status))
+                .WithMessage($"Estado debe ser uno de: {string.Join(", ", ValidStatuses)}");
+        }
+    }
 }

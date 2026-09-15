@@ -404,11 +404,14 @@ app.MapPut("/api/users/{id:int}/validate-email", async (
     try
     {
         var isValid = await userService.ValidateEmailGDPRAsync(id);
-        var message = isValid
+        if (isValid == null)
+            return Results.NotFound(ApiResponse<bool>.Fail($"Usuario con ID {id} no se encontro"));
+
+        var message = isValid.Value
             ? "Email cumple con GDPR (EU domain)"
             : "Email no cumple con GDPR (non-EU domain)";
 
-        return Results.Ok(ApiResponse<bool>.Ok(isValid, message));
+        return Results.Ok(ApiResponse<bool>.Ok(isValid.Value, message));
     }
     catch (Exception ex)
     {
