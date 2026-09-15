@@ -286,6 +286,11 @@ app.MapPost("/api/auth/register", async (
         return Results.Created($"/api/users/{user.Id}",
             ApiResponse<UserDto>.Ok(user, "User registrado ok"));
     }
+    catch (InvalidOperationException ex)
+    {
+        Log.Warning(ex, "Registro rechazado por datos invalidos");
+        return Results.BadRequest(ApiResponse<UserDto>.Fail(ex.Message));
+    }
     catch (Exception ex)
     {
         Log.Error(ex, "Error al registrar el usuario");
