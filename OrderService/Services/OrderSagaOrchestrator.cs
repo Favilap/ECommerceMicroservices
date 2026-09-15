@@ -52,7 +52,8 @@ namespace OrderService.Services
                     }
 
                     var productJson = await productResponse.Content.ReadAsStringAsync();
-                    var product = System.Text.Json.JsonSerializer.Deserialize<ProductInfo>(productJson);
+                    var product = System.Text.Json.JsonSerializer.Deserialize<ProductInfo>(productJson,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     if (product?.Data != null)
                     {
