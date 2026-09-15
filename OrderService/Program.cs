@@ -258,8 +258,17 @@ app.MapGet("/api/orders/user/{userId:int}", async (
 app.MapPut("/api/orders/{id:int}/status", async (
     int id,
     UpdateOrderStatusDto dto,
-    IOrderService orderService) =>
+    IOrderService orderService,
+    IValidator<UpdateOrderStatusDto> validator) =>
 {
+    var validationResult = await validator.ValidateAsync(dto);
+    if (!validationResult.IsValid)
+    {
+        return Results.BadRequest(ApiResponse<OrderDto>.Fail(
+            "Validacion fallida",
+            validationResult.Errors.Select(e => e.ErrorMessage).ToList()));
+    }
+
     try
     {
         var order = await orderService.UpdateOrderStatusAsync(id, dto.Status);

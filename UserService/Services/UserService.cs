@@ -72,11 +72,11 @@ namespace UserService.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> ValidateEmailGDPRAsync(int userId)
+        public async Task<bool?> ValidateEmailGDPRAsync(int userId)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
-                return false;
+                return null;
 
             // Validar si el email es de un dominio europeo
             return _euDomains.Any(domain => user.Email.EndsWith(domain, StringComparison.OrdinalIgnoreCase));
