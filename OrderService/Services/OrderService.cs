@@ -19,6 +19,9 @@ namespace OrderService.Services
 
         public async Task<PagedResponse<OrderDto>> GetOrdersAsync(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(1, pageNumber);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
             var totalItems = await _context.Orders.CountAsync();
 
             var orders = await _context.Orders

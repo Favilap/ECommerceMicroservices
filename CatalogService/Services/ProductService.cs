@@ -20,6 +20,9 @@ namespace CatalogService.Services
         public async Task<PagedResponse<ProductDto>> GetProductsAsync(
         int pageNumber, int pageSize, string? category, decimal? minPrice, decimal? maxPrice)
         {
+            pageNumber = Math.Max(1, pageNumber);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
             var query = _context.Products.Where(p => p.IsActive);
 
             if (!string.IsNullOrEmpty(category))
@@ -147,6 +150,9 @@ namespace CatalogService.Services
         public async Task<PagedResponse<ProductDto>> SearchProductsAsync(
             string query, int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(1, pageNumber);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
             var products = _context.Products
                 .Where(p => p.IsActive &&
                        (p.Name.Contains(query) || p.Description.Contains(query)));
